@@ -1,6 +1,9 @@
 import axios from "./customizeAxios";
-const fetchAllUser = () => {
-  return axios.get("/users?page=2"); //tra ve 1 promise -> await
+const fetchAllUser = (currentPage) => {
+  return axios.get(`/users?page=${currentPage}`); //tra ve 1 promise -> await
 };
 
-export { fetchAllUser };
+const postCreateUser = (name, job) => {
+  return axios.post("/users", { name: name, job: job });
+};
+export { fetchAllUser, postCreateUser };

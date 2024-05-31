@@ -1,8 +1,10 @@
+import "bootstrap/dist/css/bootstrap.min.css";
 import { Container } from "react-bootstrap";
+import { Bounce, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import Header from "./components/Header";
 import TableUser from "./components/TableUser";
-import "bootstrap/dist/css/bootstrap.min.css";
 function App() {
   return (
     <div className="app-container">
@@ -10,6 +12,20 @@ function App() {
       <Container>
         <TableUser />
       </Container>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored"
+        transition={Bounce}
+      />
     </div>
   );
 }
