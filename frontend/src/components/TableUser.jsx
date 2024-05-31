@@ -10,8 +10,8 @@ function TableUser() {
 
   const getUsers = async () => {
     let res = await fetchAllUser();
-    if (res && res?.data && res?.data?.data && res.status === 200)
-      setListUser(res?.data?.data);
+    console.log(res);
+    if (res && res?.data) setListUser(res?.data);
   };
   return (
     <Table striped bordered hover>
