@@ -6,3 +6,6 @@ npm install --save-exact react-paginate@8.1.2
 
 Bài 9:
 npm i --save-exact react-toastify@8.2.0
+
+Bài 11:
+npm i --save-exact lodash@4.17.21

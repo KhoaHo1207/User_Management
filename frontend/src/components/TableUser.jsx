@@ -4,17 +4,27 @@ import { fetchAllUser } from "../services/UserService";
 import ReactPaginate from "react-paginate";
 import ModalAddNew from "./ModalAddNew";
 import { Button } from "react-bootstrap";
+import { MdDelete } from "react-icons/md";
+import { LiaExchangeAltSolid } from "react-icons/lia";
+import ModalEditUser from "./ModalEditUser";
+import ModalConfirm from "./ModalConfirm";
+import _ from "lodash";
 function TableUser() {
   const [listUser, setListUser] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [openAddNew, setOpenAddNew] = useState(false);
-
+  const [openEditUser, setOpenEditUser] = useState(false);
+  const [dataUserEdit, setDateUserEdit] = useState({});
+  const [isShowModalDelete, setIsShowModalDelete] = useState(false);
+  const [dataUserDelete, setDateUserDelete] = useState({});
   const handleOpenAddNew = () => {
     setOpenAddNew(true);
   };
 
   const handleClose = () => {
     setOpenAddNew(false);
+    setOpenEditUser(false);
+    setIsShowModalDelete(false);
   };
 
   useEffect(() => {
@@ -37,6 +47,28 @@ function TableUser() {
   const handleUpdateTable = (user) => {
     setListUser([...listUser, user]);
   };
+
+  const handleOpenEditUser = (user) => {
+    setOpenEditUser(true);
+    setDateUserEdit(user);
+  };
+
+  const handleEditUserFromModal = (user) => {
+    let cloneListUser = _.cloneDeep(listUser);
+    let index = listUser.findIndex((item) => item.id === user.id);
+    cloneListUser[index].first_name = user.first_name;
+    setListUser(cloneListUser);
+  };
+  const handleDelete = (user) => {
+    setIsShowModalDelete(true);
+    setDateUserDelete(user);
+  };
+
+  const handleDeleteUserFromModal = (user) => {
+    let cloneListUser = _.cloneDeep(listUser);
+    cloneListUser = cloneListUser.filter((item) => item.id !== user.id);
+    setListUser(cloneListUser);
+  };
   return (
     <>
       <div className="d-flex flex-row justify-content-between my-3">
@@ -54,6 +86,7 @@ function TableUser() {
             <th>Email</th>
             <th>First Name</th>
             <th>Last Name</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -63,6 +96,17 @@ function TableUser() {
               <td>{user.email}</td>
               <td>{user.first_name}</td>
               <td>{user.last_name}</td>
+              <td className="d-flex flex-row justify-content-center gap-3">
+                <Button
+                  variant="warning"
+                  onClick={() => handleOpenEditUser(user)}
+                >
+                  <LiaExchangeAltSolid /> Edit
+                </Button>
+                <Button variant="danger" onClick={() => handleDelete(user)}>
+                  <MdDelete /> Delete
+                </Button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -89,6 +133,18 @@ function TableUser() {
         openAddNew={openAddNew}
         handleClose={handleClose}
         handleUpdateTable={handleUpdateTable}
+      />
+      <ModalEditUser
+        openEditUser={openEditUser}
+        handleClose={handleClose}
+        dataUserEdit={dataUserEdit}
+        handleEditUserFromModal={handleEditUserFromModal}
+      />
+      <ModalConfirm
+        show={isShowModalDelete}
+        handleClose={handleClose}
+        dataUserDelete={dataUserDelete}
+        handleDeleteUserFromModal={handleDeleteUserFromModal}
       />
     </>
   );
