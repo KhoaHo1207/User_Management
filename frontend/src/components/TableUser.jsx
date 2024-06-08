@@ -17,6 +17,8 @@ function TableUser() {
   const [dataUserEdit, setDateUserEdit] = useState({});
   const [isShowModalDelete, setIsShowModalDelete] = useState(false);
   const [dataUserDelete, setDateUserDelete] = useState({});
+  const [sortBy, setSortBy] = useState("asc");
+  const [sortField, setSortField] = useState("id");
   const handleOpenAddNew = () => {
     setOpenAddNew(true);
   };
@@ -69,6 +71,18 @@ function TableUser() {
     cloneListUser = cloneListUser.filter((item) => item.id !== user.id);
     setListUser(cloneListUser);
   };
+
+  const handleSort = (sortField, sortBy) => {
+    setSortField(sortField);
+    setSortBy(sortBy);
+    let cloneListUser = _.cloneDeep(listUser);
+    // cloneListUser.sort((a, b) => a[sortField] - b[sortField]);
+    cloneListUser = _.orderBy(cloneListUser, [sortField], [sortBy]);
+    setListUser(cloneListUser);
+    console.log(cloneListUser);
+  };
+
+  console.log(sortField, sortBy);
   return (
     <>
       <div className="d-flex flex-row justify-content-between my-3">
@@ -82,9 +96,33 @@ function TableUser() {
       <Table striped bordered hover>
         <thead>
           <tr>
-            <th>ID</th>
+            <th className="d-flex flex-row justify-content-start gap-2">
+              <div>ID</div>
+              <div>
+                <i
+                  className="fa-solid fa-arrow-up-long"
+                  onClick={() => handleSort("id", "asc")}
+                ></i>
+                <i
+                  className="fa-solid fa-arrow-down-long"
+                  onClick={() => handleSort("id", "desc")}
+                ></i>
+              </div>
+            </th>
             <th>Email</th>
-            <th>First Name</th>
+            <th className="d-flex flex-row justify-content-start gap-2">
+              <div>First Name</div>
+              <div>
+                <i
+                  className="fa-solid fa-arrow-up-long"
+                  onClick={() => handleSort("first_name", "asc")}
+                ></i>
+                <i
+                  className="fa-solid fa-arrow-down-long"
+                  onClick={() => handleSort("first_name", "desc")}
+                ></i>
+              </div>
+            </th>
             <th>Last Name</th>
             <th>Action</th>
           </tr>

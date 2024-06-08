@@ -8,8 +8,6 @@ function ModalConfirm(props) {
   //   const [show, setShow] = useState(false);
   const { show, handleClose, dataUserDelete, handleDeleteUserFromModal } =
     props;
-  const [name, setName] = useState("");
-  const [job, setJob] = useState("");
 
   const handleConfirmDelete = async () => {
     let res = await deleteUser(deleteUser.id);
@@ -25,10 +23,6 @@ function ModalConfirm(props) {
 
   return (
     <>
-      {/* <Button variant="primary" onClick={openAddNew}>
-        Launch demo modal
-      </Button> */}
-
       <Modal
         show={show}
         onHide={handleClose}
