@@ -108,6 +108,11 @@ function TableUser() {
     handleSearchDebounced(term, listUser, setListUser, getUsers);
   };
 
+  const handleAddImport = (list) => {
+    let cloneListUser = listUser;
+    cloneListUser = [...cloneListUser, ...list];
+    setListUser(cloneListUser);
+  };
   const csvData = [
     ["firstname", "lastname", "email"],
     ["Ahmed", "Tomi", "ah@smthing.co.com"],
@@ -155,8 +160,38 @@ function TableUser() {
       }
 
       Papa.parse(file, {
+        // header: true,
         complete: function (results) {
-          console.log("Finished:", results.data);
+          let rawCSV = results.data;
+          if (rawCSV.length > 0) {
+            if (rawCSV[0] && rawCSV[0].length === 3) {
+              if (
+                rawCSV[0][0] !== "email" ||
+                rawCSV[0][1] !== "first_name" ||
+                rawCSV[0][2] !== "last_name"
+              ) {
+                toast.error("Wrong format CSV file");
+              } else {
+                let result = [];
+                rawCSV.map((item, index) => {
+                  if (index > 0 && item.length === 3) {
+                    const newuser = {
+                      email: item[0],
+                      first_name: item[1],
+                      last_name: item[2],
+                    };
+                    result.push(newuser);
+                  }
+                });
+                handleAddImport(result);
+                console.log("result", result);
+              }
+            } else {
+              toast.error("Wrong format CSV file");
+            }
+          } else {
+          }
+          // console.log("Finished:", results.data);
         },
       });
       toast.success("Imported successfully");
@@ -175,10 +210,11 @@ function TableUser() {
             // accept=".csv"
             hidden
             onChange={(e) => handleImport(e)}
+            className="cursor-pointer"
           />
-          <button className="btn btn-warning">
+          <button className="btn btn-warning cursor-pointer ">
             <i className="fa-solid fa-file-import"></i>
-            <label htmlFor="Import" className="cursor-pointer">
+            <label htmlFor="Import" className="">
               Import
             </label>
           </button>
