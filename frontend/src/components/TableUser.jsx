@@ -8,7 +8,10 @@ import { MdDelete } from "react-icons/md";
 import { LiaExchangeAltSolid } from "react-icons/lia";
 import ModalEditUser from "./ModalEditUser";
 import ModalConfirm from "./ModalConfirm";
-import _ from "lodash";
+import _, { debounce, result } from "lodash";
+import { CSVLink, CSVDownload } from "react-csv";
+import Papa from "papaparse";
+import { toast } from "react-toastify";
 function TableUser() {
   const [listUser, setListUser] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -19,6 +22,8 @@ function TableUser() {
   const [dataUserDelete, setDateUserDelete] = useState({});
   const [sortBy, setSortBy] = useState("asc");
   const [sortField, setSortField] = useState("id");
+  const [search, setSearch] = useState("");
+  const [dataExport, setDataExport] = useState([]);
   const handleOpenAddNew = () => {
     setOpenAddNew(true);
   };
@@ -79,19 +84,129 @@ function TableUser() {
     // cloneListUser.sort((a, b) => a[sortField] - b[sortField]);
     cloneListUser = _.orderBy(cloneListUser, [sortField], [sortBy]);
     setListUser(cloneListUser);
-    console.log(cloneListUser);
   };
 
-  console.log(sortField, sortBy);
+  const handleSearchDebounced = debounce(
+    (term, listUser, setListUser, getUsers) => {
+      if (term) {
+        let cloneListUser = _.clone(listUser); // Sử dụng sao chép nông
+        cloneListUser = cloneListUser.filter((item) =>
+          item.email.includes(term)
+        );
+        setListUser(cloneListUser);
+      } else {
+        getUsers(1);
+      }
+    },
+    500
+  ); // Giảm thời gian trì hoãn xuống 500ms
+
+  const handleSearch = (e) => {
+    console.log(e.target.value);
+    let term = e.target.value;
+    setSearch(term);
+    handleSearchDebounced(term, listUser, setListUser, getUsers);
+  };
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
+  // const handleSearch = debounce((e) => {
+  //   console.log(e.target.value);
+  //   let term = e.target.value;
+  //   setSearch(term);
+  //   console.log(search);
+  //   if (term) {
+  //     let cloneListUser = _.cloneDeep(listUser);
+  //     cloneListUser = cloneListUser.filter((item) => item.email.includes(term)); //includes trả ra true hoặc false
+  //     setListUser(cloneListUser);
+  //   } else {
+  //     getUsers(1);
+  //   }
+  // }, 2000);
+
+  const getUserExport = (e, done) => {
+    let result = [];
+    if (listUser && listUser.length > 0) {
+      result.push(["Id", "Email", "First Name", "Last Name"]);
+      result = result.concat(
+        listUser.map((item) => [
+          item.id,
+          item.email,
+          item.first_name,
+          item.last_name,
+        ])
+      );
+      setDataExport(result);
+      done();
+    }
+  };
+
+  const handleImport = (e) => {
+    if (e.target && e.target.files && e.target.files[0]) {
+      let file = e.target.files[0];
+
+      if (file.type !== "text/csv") {
+        toast.error("Wrong type (text/csv)");
+        return;
+      }
+
+      Papa.parse(file, {
+        complete: function (results) {
+          console.log("Finished:", results.data);
+        },
+      });
+      toast.success("Imported successfully");
+    }
+  };
   return (
     <>
       <div className="d-flex flex-row justify-content-between my-3">
         <span className="fs-5">
           <b>List Users: </b>
         </span>
-        <Button variant="success" onClick={() => handleOpenAddNew()}>
-          Add new user
-        </Button>
+        <div className="d-flex flex-row justify-content-center gap-2">
+          <input
+            id="Import"
+            type="file"
+            // accept=".csv"
+            hidden
+            onChange={(e) => handleImport(e)}
+          />
+          <button className="btn btn-warning">
+            <i className="fa-solid fa-file-import"></i>
+            <label htmlFor="Import" className="cursor-pointer">
+              Import
+            </label>
+          </button>
+          <CSVLink
+            data={dataExport}
+            filename="Users.csv"
+            className="btn btn-primary "
+            asyncOnClick={true}
+            onClick={getUserExport}
+          >
+            <i className="fa-solid fa-download"></i>
+            Export
+          </CSVLink>
+
+          <Button variant="success" onClick={() => handleOpenAddNew()}>
+            + Add new user
+          </Button>
+        </div>
+      </div>
+      <div className="col-6 my-4">
+        <input
+          type="text"
+          name="search"
+          className="form-control"
+          value={search}
+          placeholder="Search user by email..."
+          onChange={handleSearch}
+        />
       </div>
       <Table striped bordered hover>
         <thead>
