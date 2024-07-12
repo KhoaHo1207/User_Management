@@ -12,3 +12,63 @@ code {
     monospace;
 }
 
+.app-container {
+  .login-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+  }
+  .title {
+    text-align: center;
+    font-size: 23px;
+    font-weight: 600;
+    padding-top: 30px;
+  }
+
+  .text {
+    font-weight: 600;
+    padding-bottom: 3px;
+  }
+
+  input {
+    padding: 12px 10px;
+    outline: none;
+    margin-bottom: 10px;
+    width: 100%;
+    &:hover {
+      background-color: #dedede;
+      border: 1px solid #dedede;
+    }
+  }
+  .password {
+    position: relative;
+    .eyes {
+      position: absolute;
+      top: 17px;
+      right: 10px;
+    }
+  }
+
+  button {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 3px;
+    outline: none;
+    border: none;
+
+    &.active {
+      background-color: #fe2c55;
+      color: white;
+    }
+  }
+  button[disabled="disabled"],
+  button:disabled {
+    background-color: #dedede;
+    color: white;
+    cursor: not-allowed;
+  }
+  .back {
+    text-align: center;
+    margin-top: 20px;
+  }
+}

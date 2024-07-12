@@ -15,3 +15,6 @@ npm install --save-exact @fortawesome/fontawesome-free@6.1.1
 
 Bai 16:
 npm install --save-exact react-csv@2.2.2 papaparse@5.3.2
+
+Bai 20:
+npm install --save-exact react-router-dom@6.3.0
