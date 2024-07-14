@@ -16,6 +16,7 @@ function App() {
       <Container>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
           <Route path="/users" element={<TableUser />} />
           <Route path="/login" element={<Login />} />
         </Routes>

@@ -1,27 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loginApi } from "../services/UserService";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("eve.holt@reqres.in");
+  const [password, setPassword] = useState("cityslicka");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const handleLogin = async () => {
     if (email && password) {
+      setIsLoading(true);
       let res = await loginApi(email, password);
       if (res && res.token) {
         localStorage.setItem("token", res.token);
         toast.success("Login successfully");
+        navigate("/");
         console.log(res);
       } else {
-        toast.error("Invalid email or password");
-        return;
+        console.log(res);
+        if (res && res.status === 400) {
+          toast.error(res.data.error);
+        }
+        // toast.error("Invalid email or password");
+        // return;
       }
     } else {
       toast.error("Please enter email & password");
-      return;
     }
+    setEmail("eve.holt@reqres.in");
+    setPassword("cityslicka");
+    setIsLoading(false);
   };
+
+  useEffect(() => {
+    let token = localStorage.getItem("token");
+    if (token) {
+      navigate("/");
+    }
+  }, []);
   return (
     <div className="login-container col-12 col-sm-4">
       <div className="title">Login</div>
@@ -51,10 +68,11 @@ function Login() {
       </div>
       <button
         className={email && password ? "active" : ""}
-        disabled={email && password ? false : true}
+        disabled={email && password && !isLoading ? false : true}
         onClick={() => handleLogin()}
       >
-        Login
+        {isLoading && <i class="fa-solid fa-spinner fa-spin-pulse"></i>}
+        &nbsp; Login
       </button>
       <div className="back">
         <i class="fa-solid fa-arrow-left"></i>Go back

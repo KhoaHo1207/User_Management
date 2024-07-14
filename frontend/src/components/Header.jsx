@@ -3,9 +3,29 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Logo from "../assets/logo192.png";
-import { Link, useLocation, NavLink } from "react-router-dom";
+import { Link, useLocation, NavLink, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
 function Header() {
   const location = useLocation();
+  const navigate = useNavigate();
+  // const [token, setToken] = useState(null);
+
+  // useEffect(() => {
+  //   const fetchToken = () => {
+  //     setToken(localStorage.getItem("token"));
+  //   };
+
+  //   fetchToken();
+  // }, [token]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    toast.success("Logout Successfully!");
+    navigate("/login");
+    // setToken(null);
+  };
+
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
@@ -34,13 +54,15 @@ function Header() {
             </Nav.Link>
           </Nav>
           <Nav>
-            <NavDropdown
-              title="Account"
-              id="basic-nav-dropdown"
-              className="text-dark"
-            >
-              <NavDropdown.Item href="#action/3.1">Login</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">Logout</NavDropdown.Item>
+            <NavDropdown title="Setting" className="text-dark">
+              <NavLink to={"/login"} className="dropdown-item">
+                Login
+              </NavLink>
+
+              <NavDropdown.Item onClick={() => handleLogout()}>
+                Logout
+              </NavDropdown.Item>
+
               {/* <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item> */}
               {/* <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">
