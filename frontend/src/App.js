@@ -9,7 +9,21 @@ import TableUser from "./components/TableUser";
 import Home from "./components/Home";
 import { Link, Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
+import { useContext, useEffect } from "react";
+import { UserContext } from "./context/UserContext";
 function App() {
+  const { user, loginContext } = useContext(UserContext);
+
+  console.log(user);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      loginContext(
+        localStorage.getItem("email"),
+        localStorage.getItem("token")
+      );
+    }
+    console.log(localStorage.getItem("token"));
+  }, []);
   return (
     <div className="app-container">
       <Header />

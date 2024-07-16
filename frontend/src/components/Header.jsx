@@ -5,22 +5,15 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Logo from "../assets/logo192.png";
 import { Link, useLocation, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "../context/UserContext";
 function Header() {
+  const { user, logout } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  // const [token, setToken] = useState(null);
-
-  // useEffect(() => {
-  //   const fetchToken = () => {
-  //     setToken(localStorage.getItem("token"));
-  //   };
-
-  //   fetchToken();
-  // }, [token]);
-
+  // const [showHeader, setShowHeader] = useState(true);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     toast.success("Logout Successfully!");
     navigate("/login");
     // setToken(null);
@@ -30,39 +23,50 @@ function Header() {
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>
         <Navbar.Brand href="#home">
-          <img
-            src={Logo}
-            alt="Logo"
-            width="30"
-            height="30"
-            className="d-inline-block align-top"
-          />
-          <span>KhoaIT's App</span>
+          <Link to={"/"} className="text-decoration-none text-dark  ">
+            <img
+              src={Logo}
+              alt="Logo"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />
+            <span>KhoaIT's App</span>
+          </Link>
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-          <Nav className="me-auto" activeKey={location.pathname}>
-            <Nav.Link>
-              <NavLink to={"/"} className="text-dark text-decoration-none">
-                Home
-              </NavLink>
-            </Nav.Link>
-            <Nav.Link>
-              <NavLink to={"/users"} className="text-dark text-decoration-none">
-                Mange Users
-              </NavLink>
-            </Nav.Link>
-          </Nav>
+          {user && user.auth === true && (
+            <Nav className="me-auto" activeKey={location.pathname}>
+              <Nav.Link>
+                <NavLink to={"/"} className="text-dark text-decoration-none">
+                  Home
+                </NavLink>
+              </Nav.Link>
+              <Nav.Link>
+                <NavLink
+                  to={"/users"}
+                  className="text-dark text-decoration-none"
+                >
+                  Mange Users
+                </NavLink>
+              </Nav.Link>
+            </Nav>
+          )}
           <Nav>
+            {user && user.auth === true && (
+              <span className="nav-link">Welcome {user.email}</span>
+            )}
             <NavDropdown title="Setting" className="text-dark">
-              <NavLink to={"/login"} className="dropdown-item">
-                Login
-              </NavLink>
-
-              <NavDropdown.Item onClick={() => handleLogout()}>
-                Logout
-              </NavDropdown.Item>
-
+              {user && user.auth === false ? (
+                <NavLink to={"/login"} className="dropdown-item">
+                  Login
+                </NavLink>
+              ) : (
+                <NavDropdown.Item onClick={() => handleLogout()}>
+                  Logout
+                </NavDropdown.Item>
+              )}
               {/* <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item> */}
               {/* <NavDropdown.Divider />
               <NavDropdown.Item href="#action/3.4">

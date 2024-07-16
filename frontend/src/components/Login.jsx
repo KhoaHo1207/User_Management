@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { loginApi } from "../services/UserService";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 function Login() {
   const [email, setEmail] = useState("eve.holt@reqres.in");
   const [password, setPassword] = useState("cityslicka");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+
+  const { loginContext } = useContext(UserContext);
   const handleLogin = async () => {
     if (email && password) {
       setIsLoading(true);
       let res = await loginApi(email, password);
       if (res && res.token) {
-        localStorage.setItem("token", res.token);
+        loginContext(email, res.token);
         toast.success("Login successfully");
         navigate("/");
         console.log(res);
@@ -33,12 +36,12 @@ function Login() {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    let token = localStorage.getItem("token");
-    if (token) {
-      navigate("/");
-    }
-  }, []);
+  // useEffect(() => {
+  //   let token = localStorage.getItem("token");
+  //   if (token) {
+  //     navigate("/");
+  //   }
+  // }, []);
   return (
     <div className="login-container col-12 col-sm-4">
       <div className="title">Login</div>
@@ -75,7 +78,8 @@ function Login() {
         &nbsp; Login
       </button>
       <div className="back">
-        <i class="fa-solid fa-arrow-left"></i>Go back
+        <i class="fa-solid fa-arrow-left"></i>
+        &nbsp; Go back
       </div>
     </div>
   );
