@@ -20,6 +20,7 @@ function PrivateRoutes(props) {
       </>
     );
   }
+  console.log("jsssdsddsjj");
   return <>{props.children}</>;
 }
 

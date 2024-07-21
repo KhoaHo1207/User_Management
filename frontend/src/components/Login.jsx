@@ -14,10 +14,13 @@ function Login() {
   const handleLogin = async () => {
     if (email && password) {
       setIsLoading(true);
-      let res = await loginApi(email, password);
+      let res = await loginApi(email.trim(), password);
       if (res && res.token) {
         loginContext(email, res.token);
         toast.success("Login successfully");
+        setEmail("eve.holt@reqres.in");
+        setPassword("cityslicka");
+        setIsLoading(false);
         navigate("/");
         console.log(res);
       } else {
@@ -31,11 +34,13 @@ function Login() {
     } else {
       toast.error("Please enter email & password");
     }
-    setEmail("eve.holt@reqres.in");
-    setPassword("cityslicka");
-    setIsLoading(false);
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === "Enter") {
+      handleLogin();
+    }
+  };
   // useEffect(() => {
   //   let token = localStorage.getItem("token");
   //   if (token) {
@@ -51,6 +56,7 @@ function Login() {
         placeholder="Email or username..."
         value={email}
         onChange={(e) => setEmail(e.target.value)}
+        onKeyDown={handleKeyDown}
       />
       <div className="text">Password</div>
       <div className="password">
@@ -59,6 +65,7 @@ function Login() {
           placeholder="Password..."
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          onKeyDown={handleKeyDown}
         />
         <div className="eyes pe-auto">
           <i
