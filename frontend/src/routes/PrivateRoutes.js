@@ -4,8 +4,9 @@ import TableUser from "../components/TableUser";
 import { UserContext } from "../context/UserContext";
 import Alert from "react-bootstrap/Alert";
 import Button from "react-bootstrap/Button";
+import { useSelector } from "react-redux";
 function PrivateRoutes(props) {
-  const { user } = useContext(UserContext);
+  const user = useSelector((state) => state.users.account);
   if (user && !user.auth) {
     return (
       <>

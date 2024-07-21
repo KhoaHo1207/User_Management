@@ -7,18 +7,25 @@ import { Link, useLocation, NavLink, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogout } from "../store/actions/userAction";
 function Header() {
-  const { user, logout } = useContext(UserContext);
   const location = useLocation();
   const navigate = useNavigate();
-  // const [showHeader, setShowHeader] = useState(true);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.users.account);
   const handleLogout = () => {
-    logout();
+    dispatch(userLogout());
     toast.success("Logout Successfully!");
     navigate("/login");
     // setToken(null);
   };
 
+  useEffect(() => {
+    if (!user.auth) {
+      navigate("/login");
+    }
+  }, [user]);
   return (
     <Navbar expand="lg" className="bg-body-tertiary">
       <Container>

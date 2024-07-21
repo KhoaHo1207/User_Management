@@ -3,34 +3,36 @@ import { loginApi } from "../services/UserService";
 import { toast } from "react-toastify";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogin } from "../store/actions/userAction";
 function Login() {
   const [email, setEmail] = useState("eve.holt@reqres.in");
   const [password, setPassword] = useState("cityslicka");
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const { loginContext } = useContext(UserContext);
+  const isLoading = useSelector((state) => state.users.isLoading);
+  const account = useSelector((state) => state.users.account);
   const handleLogin = async () => {
     if (email && password) {
-      setIsLoading(true);
-      let res = await loginApi(email.trim(), password);
-      if (res && res.token) {
-        loginContext(email, res.token);
-        toast.success("Login successfully");
-        setEmail("eve.holt@reqres.in");
-        setPassword("cityslicka");
-        setIsLoading(false);
-        navigate("/");
-        console.log(res);
-      } else {
-        console.log(res);
-        if (res && res.status === 400) {
-          toast.error(res.data.error);
-        }
-        // toast.error("Invalid email or password");
-        // return;
-      }
+      dispatch(userLogin(email, password));
+
+      // let res = await loginApi(email.trim(), password);
+      // if (res && res.token) {
+      //   loginContext(email, res.token);
+      //   toast.success("Login successfully");
+      //   setEmail("eve.holt@reqres.in");
+      //   setPassword("cityslicka");
+      //   setIsLoading(false);
+      //   navigate("/");
+      //   console.log(res);
+      // } else {
+      //   console.log(res);
+      //   if (res && res.status === 400) {
+      //     toast.error(res.data.error);
+      //   }
+      // }
     } else {
       toast.error("Please enter email & password");
     }
@@ -41,12 +43,11 @@ function Login() {
       handleLogin();
     }
   };
-  // useEffect(() => {
-  //   let token = localStorage.getItem("token");
-  //   if (token) {
-  //     navigate("/");
-  //   }
-  // }, []);
+  useEffect(() => {
+    if (account && account.auth) {
+      navigate("/");
+    }
+  }, [account]);
   return (
     <div className="login-container col-12 col-sm-4">
       <div className="title">Login</div>

@@ -6,25 +6,23 @@ import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./App.scss";
 import Header from "./components/Header";
 
-import { Link, Routes, Route } from "react-router-dom";
+import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import Login from "./components/Login";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
 import AppRoutes from "./routes/AppRoutes";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { refresh, userLogin } from "./store/actions/userAction";
 function App() {
-  const { user, loginContext } = useContext(UserContext);
-  const dataUserRedux = useSelector((state) => state.users.account);
-  console.log("datauserredux", dataUserRedux);
-  console.log(user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const user = useSelector((state) => state.users.account);
+
+  // console.log(user);
   useEffect(() => {
     if (localStorage.getItem("token")) {
-      loginContext(
-        localStorage.getItem("email"),
-        localStorage.getItem("token")
-      );
+      dispatch(refresh());
     }
-    console.log(localStorage.getItem("token"));
   }, []);
   return (
     <div className="app-container">

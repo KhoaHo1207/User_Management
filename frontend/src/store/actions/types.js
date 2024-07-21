@@ -1,2 +1,5 @@
-export const USER_LOGIN = "USER_LOGIN";
+export const FETCH_USER_LOGIN = "FETCH_USER_LOGIN";
+export const FETCH_USER_ERROR = "FETCH_USER_ERROR";
+export const FETCH_USER_SUUCCESS = "FETCH_USER_SUUCCESS";
 export const USER_LOGOUT = "USER_LOGOUT";
+export const REFRESH = "REFRESH";
