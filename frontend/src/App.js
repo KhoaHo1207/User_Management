@@ -11,9 +11,11 @@ import Login from "./components/Login";
 import { useContext, useEffect } from "react";
 import { UserContext } from "./context/UserContext";
 import AppRoutes from "./routes/AppRoutes";
+import { useSelector } from "react-redux";
 function App() {
   const { user, loginContext } = useContext(UserContext);
-
+  const dataUserRedux = useSelector((state) => state.users.account);
+  console.log("datauserredux", dataUserRedux);
   console.log(user);
   useEffect(() => {
     if (localStorage.getItem("token")) {
