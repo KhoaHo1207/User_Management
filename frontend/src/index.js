@@ -5,14 +5,17 @@ import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./context/UserContext";
 import { Provider } from "react-redux";
 import store from "./store/store";
+import ErrorBoundary from "./Error/Error";
 ReactDOM.render(
-  <Provider store={store}>
-    <UserProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </UserProvider>
-  </Provider>,
+  <ErrorBoundary>
+    <Provider store={store}>
+      <UserProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </UserProvider>
+    </Provider>
+  </ErrorBoundary>,
   document.getElementById("root")
 );
 

@@ -24,3 +24,5 @@ npm i --save-exact react-error-overlay@6.0.9
 
 Bai 29:
 npm install --save-exact redux@4.2.0 react-redux@8.0.1 redux-thunk@2.4.1 redux-devtools-extension@2.13.9
+
+*** Error boundaries

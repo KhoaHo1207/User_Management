@@ -18,7 +18,8 @@ function App() {
   const navigate = useNavigate();
   const user = useSelector((state) => state.users.account);
 
-  // console.log(user);
+  const a = null;
+  console.log(a.adguigjh);
   useEffect(() => {
     if (localStorage.getItem("token")) {
       dispatch(refresh());
